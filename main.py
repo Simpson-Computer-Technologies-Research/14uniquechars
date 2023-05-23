@@ -1,8 +1,9 @@
 import time
 
-s: str = "abcdefghijklmnopqrstuvwxyz"
+s: str = "abcdefgghijklmnopqrstuvwxyz"
+b: bytes = bytes(s, 'ascii')
 
-def one(start: int):
+def one(start: int) -> str:
     data: dict[str, int] = {}
     tot: int = 0
     if start >= len(s):
@@ -17,19 +18,18 @@ def one(start: int):
                 return s[start:tot+start]
     return ""
 
-def two(start: int):
-    data: dict[str, int] = {}
+def two(start: int) -> str:
+    arr: list[int] = [0] * 32
     tot: int = 0
-    if start >= len(s):
-        return ""
-    for i in range(len(s) - start):
-        if s[start+i] in data:
+    for i in range(len(b) - start):
+        d: int = b[start+i] % 32
+        if arr[d]:
             return two(i+1)
-        else:
-            data[s[start+i]] = 0
-            tot += 1
-            if tot == 14:
-                return s[start:tot+start]
+        
+        arr[d] = 1
+        tot += 1
+        if tot == 14:
+            return s[start:tot+start]
     return ""
 
 st: float = time.time()
@@ -43,4 +43,4 @@ print(t2)
 
 print(t1/t2)
 
-# two is 5x faster than one
+# two is 7x faster than one
